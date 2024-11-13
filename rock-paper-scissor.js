@@ -1,6 +1,3 @@
-// console.log("test test babe")
-// test test the branch thing
-
 // step 1: Get computer choice
 function getComputerChoice() {
     const randomNumber = Math.random();
@@ -18,18 +15,24 @@ function getComputerChoice() {
 
     nround++;
     const containerComputerChoice = document.querySelector(".computer-choice");
+    if (ngames > 0 && nround === 1) {
+        containerComputerChoice.lastChild.remove();
+    }
+    
     if (nround > 1) {
         containerComputerChoice.lastChild.remove();
     }
 
     const elComputerChoice = document.createElement("div");
     elComputerChoice.textContent = computerChoice;
+    elComputerChoice.style.cssText = "font-size: 64px; font-weight: 900;";
     containerComputerChoice.appendChild(elComputerChoice);
 
     return computerChoice;
 }
 
 // Step 2: Declare the players score variables in global scope
+let ngames = 0;
 let nround = 0;
 let computerScore = 0;
 let humanScore = 0;
@@ -57,36 +60,57 @@ function playRound(computerChoice, humanChoice) {
     } else if (winner === "human") {
         humanScore++;
     }
-    
+
     const containerHumanChoice = document.querySelector(".human-choice");
-    if (nround > 1) {
+    if (ngames > 0 && nround === 1) {
         containerHumanChoice.lastChild.remove();
     }
     
+    if (nround > 1) {
+        containerHumanChoice.lastChild.remove();
+    }
+
     const elHumanChoice = document.createElement("div");
     elHumanChoice.textContent = "Your choice of the round is " + humanChoice;
     containerHumanChoice.appendChild(elHumanChoice);
-    
+
     const containerBody = document.querySelector("body");
     if (nround > 1) {
         containerBody.lastChild.remove();
     }
 
     const elRoundResult = document.createElement("div");
-    elRoundResult.textContent = "The winner of round " + nround + " is " + winner;
+    elRoundResult.textContent = "The winner of round " + nround + " is " + winner +
+        ", and computer's current score is " + computerScore + ", and human's current score is " + humanScore + ".";
+    elRoundResult.style.cssText = "font-size: 20px; align-self: center; font-family: \"Roboto\", sans-serif; font-weight: 500;";
     containerBody.appendChild(elRoundResult);
 
     console.log("It's round " + nround + ", and the round winner is: " + winner);
-    
     console.log("It's round " + nround + ", and computer's current score is " + computerScore);
     console.log("It's round " + nround + ", and human's current score is " + humanScore);
 
     if (computerScore === 5) {
         finalWinner = "computer";
         console.log("Computer has won the game.");
+        const elFinalResult = document.createElement("div");
+        elFinalResult.textContent = "Computer has won the game.";
+        elFinalResult.style.cssText = "font-size: 20px; align-self: center; font-family: \"Roboto\", sans-serif; font-weight: 500; color: #f95959; margin-bottom: 16px;";
+        containerBody.appendChild(elFinalResult);
+        nround = 0;
+        computerScore = 0;
+        humanScore = 0;
+        ngames++;
     } else if (humanScore === 5) {
         finalWinner = "human";
         console.log("YOU WON THE GAME!!!")
+        const elFinalResult = document.createElement("div");
+        elFinalResult.textContent = "YOU WON THE GAME!!!";
+        elFinalResult.style.cssText = "font-size: 36px; align-self: center; font-family: \"Roboto\", sans-serif; font-weight: 900; color: #42b883; margin-bottom: 16px;";
+        containerBody.appendChild(elFinalResult);
+        nround = 0;
+        computerScore = 0;
+        humanScore = 0;
+        ngames++;
     }
 
     return winner;
@@ -105,39 +129,3 @@ const btnScissor = document.querySelector("#btnscissor");
 btnScissor.addEventListener("click", () => {
     playRound(getComputerChoice(), "scissor");
 });
-
-
-// Step 6: Write the logic to play the entire game
-function playGame() {
-    let i = 0;
-    while (i < 5) {
-        roundWinner = playRound(getComputerChoice(), getHumanChoice());
-        if (roundWinner !== null) {
-            i++;
-        } else {
-            alert("Input not valid, try again!");
-        }
-        console.log("It's round " + i + ", and computer's current score is " + computerScore);
-        console.log("It's round " + i + ", and human's current score is " + humanScore);
-    }
-
-    if (computerScore > humanScore) {
-        finalWinner = "computer";
-    } else if (computerScore < humanScore) {
-        finalWinner = "human";
-    } else if (computerScore === humanScore) {
-        finalWinner = "neither player, it's a tied game";
-    }
-
-    return finalWinner;
-}
-
-// console.log("The final winner of the game is " + playGame());
-
-// Test test
-// myComputerChoice = getComputerChoice();
-// myHumanChoice = getHumanChoice();
-
-// console.log(playRound(myComputerChoice, myHumanChoice));
-// console.log("Computer's current score is " + computerScore);
-// console.log("Human's current score is " + humanScore);
